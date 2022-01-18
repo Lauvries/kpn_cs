@@ -24,4 +24,4 @@ class Customer(models.Model):
     email = models.EmailField()
 
     def __str__(self):
-        return (f"{self.first_name}{self.last_name}{self.date_of_birth}{self.zipcode}{self.gender}")
+        return (f"{self.first_name}{self.last_name}")
