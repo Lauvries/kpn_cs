@@ -1,2 +1,2 @@
 kpn_cs_venv/
-__pycache__/
+*/__pycache__/*
