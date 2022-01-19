@@ -7,10 +7,27 @@
     <title>Landing Page</title>
 </head>
 <body>
-    <form action="">
-        <input type="text">
+    <form action="{% url "landing-page" %}" method="POST">
+        {% csrf_token %}
+        <input type="text" name="query">
         <button>Search Customer</button>
     </form>
     
+    {% if has_no_customers %}
+    <h2>We found NOTHING!</h2>
+    {% else %}
+    <ul>
+        {% for customer in qset %}
+            <li>
+                <a href="">
+                    {{ customer.first_name }}
+                    {{ customer.last_name }}
+                    {{ customer.email }}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
 </body>
 </html>
