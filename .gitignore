@@ -1,3 +1,4 @@
 kpn_cs_venv/
 */__pycache__/*
 jello/migrations/__pycache__/*
+shell_func.py

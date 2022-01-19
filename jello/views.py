@@ -5,10 +5,10 @@ from .forms import CustomerForm
 # Create your views here.
 
 
-class LandingPage(View):
+class CreateCustomer(View):
     def get(self, request):
         form = CustomerForm()
-        return render(request, 'jello/landingpage.html', {
+        return render(request, 'jello/create_customer.html', {
             "form": form
         })
 
@@ -17,9 +17,14 @@ class LandingPage(View):
         if form.is_valid():
             form.save()
 
-            return render(request, 'jello/landingpage.html', {
+            return render(request, 'jello/create_customer.html', {
                 "form": CustomerForm()
             })
-        return render(request, 'jello/landingpage.html', {
+        return render(request, 'jello/create_customer.html', {
             "form": form
         })
+
+
+class LandingPage(View):
+    def get(self, request):
+        return render(request, 'jello/landingpage.html')

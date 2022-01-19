@@ -7,19 +7,9 @@
     <title>Landing Page</title>
 </head>
 <body>
-    Hello World
-    <form action="{% url "landing-page" %}" method = "POST">
-        {% csrf_token %}
-        <ul>
-            {% for field in form %}
-                <li>
-                    {{field.label}}
-                    {{field}}
-                    {{field.errors}}
-                </li>
-            {% endfor %}
-        </ul>
-        <button>Create Customer</button>
+    <form action="">
+        <input type="text">
+        <button>Search Customer</button>
     </form>
     
 </body>
