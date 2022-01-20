@@ -9,9 +9,8 @@ class Customer(models.Model):
         ("f", "Female"),
         ("o", "Other")
     ]
-
-    last_name = models.CharField(max_length=30)
     first_name = models.CharField(max_length=30)
+    last_name = models.CharField(max_length=30)
     date_of_birth = models.DateField(auto_now=False, auto_now_add=False)
     gender = models.CharField(max_length=1, choices=GENDER_OPTIONS)
     house_number = models.IntegerField()

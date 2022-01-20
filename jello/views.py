@@ -61,6 +61,7 @@ class CustomerDetail(View):
         specific_customer = Customer.objects.get(id=id)
         customer_products = specific_customer.products.all()
         specific_customer_dict = specific_customer.__dict__
+        print(specific_customer_dict)
 
         return render(request, "jello/customer_detail.html", {
             "customer": specific_customer_dict,

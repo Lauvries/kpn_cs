@@ -21,11 +21,15 @@
         <tr>
             <td>products</td>
             <td>
-                {% for product in customer_products %}
-                    <li style="list-style-type:none;">
-                        {{ product.name }}
-                    </li>
-                {% endfor %}
+                {% if customer_products %}
+                    {% for product in customer_products %}
+                        <li style="list-style-type:none;">
+                            {{ product.name }}
+                        </li>
+                    {% endfor %}
+                {% else %}
+                No products yet, click here to <a href="">add or create</a>  some!
+                {% endif %}
             </td>
         </tr>
     </table>
