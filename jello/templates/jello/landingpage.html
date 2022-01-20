@@ -19,7 +19,7 @@
     <ul>
         {% for customer in qset %}
             <li>
-                <a href="">
+                <a href="{% url "customer-detail" customer.id %}">
                     {{ customer.first_name }}
                     {{ customer.last_name }}
                     {{ customer.email }}

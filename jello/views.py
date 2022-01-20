@@ -54,3 +54,15 @@ class LandingPage(View):
         elif qset.filter(zipcode=query[:6]):
             qset = qset.filter(zipcode=query[:6])
             return(qset.filter(house_number=query[7:]))
+
+
+class CustomerDetail(View):
+    def get(self, request, id):
+        specific_customer = Customer.objects.get(id=id)
+        customer_products = specific_customer.products.all()
+        specific_customer_dict = specific_customer.__dict__
+
+        return render(request, "jello/customer_detail.html", {
+            "customer": specific_customer_dict,
+            "customer_products": customer_products
+        })
