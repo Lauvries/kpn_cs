@@ -28,8 +28,18 @@
                         </li>
                     {% endfor %}
                 {% else %}
-                No products yet, click here to <a href="">add or create</a>  some!
+                No products yet, choose one or more then press add:
                 {% endif %}
+                <form action="{% url "add-products" %}" method="POST">
+                    {% csrf_token %}
+                    {% for product in unused_products %}
+                        <li style="list-style-type:none;">
+                            <input type="checkbox" value="{{product.name}}" name="product">{{product.name}}
+                            <input type="hidden" name="customer_id" value="{{customer.id}}">
+                        </li>
+                    {% endfor %}
+                    <button>Add</button>
+                </form>
             </td>
         </tr>
     </table>

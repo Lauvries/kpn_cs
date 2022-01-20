@@ -1,7 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.views import View
 from .forms import CustomerForm
-from .models import Customer
+from .models import Customer, Product
+from django.http import HttpResponseRedirect
+from django.urls import reverse
+
 
 # Create your views here.
 
@@ -58,12 +61,38 @@ class LandingPage(View):
 
 class CustomerDetail(View):
     def get(self, request, id):
-        specific_customer = Customer.objects.get(id=id)
+        specific_customer = get_object_or_404(Customer, id=id)
         customer_products = specific_customer.products.all()
         specific_customer_dict = specific_customer.__dict__
-        print(specific_customer_dict)
+        unused_products = self.unused_products(specific_customer)
 
         return render(request, "jello/customer_detail.html", {
             "customer": specific_customer_dict,
-            "customer_products": customer_products
+            "customer_products": customer_products,
+            "unused_products": unused_products
         })
+
+    def unused_products(self, specific_customer):
+        customer_products = specific_customer.products.all()
+        all_products = Product.objects.all()
+
+        unused_products = []
+        for product in all_products:
+            if product not in customer_products:
+                unused_products.append(product)
+        return unused_products
+
+
+def update_customer_products(request):
+    product_list = request.POST.getlist('product')
+    customer_id = request.POST.get('customer_id')
+    customer = Customer.objects.get(id=customer_id)
+    all_products_qset = Product.objects.all()
+    product_obj_list = []
+
+    for product in product_list:
+        product_obj_list.append(all_products_qset.get(name=product))
+
+    customer.products.add(*product_obj_list)
+
+    return HttpResponseRedirect(reverse("customer-detail", args=[customer_id]))
