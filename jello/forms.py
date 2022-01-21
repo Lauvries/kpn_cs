@@ -10,12 +10,7 @@ class DateInput(forms.DateInput):
 class CustomerForm(ModelForm):
     class Meta:
         model = Customer
-        # exclude = ('products',)
         fields = "__all__"
-        labels = {
-            "first_name": "First Name",
-            "last_name": "Last Name",
-        }
         widgets = {
             "date_of_birth": DateInput()
         }

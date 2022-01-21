@@ -1,6 +1,6 @@
-from re import M
-from unittest.util import _MAX_LENGTH
+from wsgiref.validate import validator
 from django.db import models
+from django.core.validators import RegexValidator
 
 
 class Customer(models.Model):
@@ -13,12 +13,14 @@ class Customer(models.Model):
     last_name = models.CharField(max_length=30)
     date_of_birth = models.DateField(auto_now=False, auto_now_add=False)
     gender = models.CharField(max_length=1, choices=GENDER_OPTIONS)
-    house_number = models.IntegerField()
+    house_number = models.CharField(max_length=10)
     house_number_suffix = models.CharField(max_length=10, blank=True)
-    zipcode = models.CharField(max_length=6)
+    zipcode = models.CharField(max_length=6, validators=[RegexValidator(
+        regex='\d{4}[a-zA-Z]{2}', message="Please enter a zipcode like: 1234AB or 1234ab", code='invalid_zipcode')])
     street = models.CharField(max_length=50)
     city = models.CharField(max_length=50)
-    mobile_number = models.CharField(max_length=50)
+    mobile_number = models.CharField(max_length=50, validators=[RegexValidator(
+        regex='^06\d{8}', message="Please enter a phonenumber like 0612345678", code="invalid_phonenumber")])
     email = models.EmailField()
     products = models.ManyToManyField(
         "Product", related_name="customers", blank=True)

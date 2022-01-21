@@ -20,10 +20,8 @@ class CreateCustomer(View):
         customer_form = CustomerForm(request.POST)
         if customer_form.is_valid():
             customer_form.save()
-
-            return render(request, 'jello/create_customer.html', {
-                "form": CustomerForm()
-            })
+            created_customer_id = Customer.objects.all().last().id
+            return HttpResponseRedirect(reverse('customer-detail', args=[created_customer_id]))
         return render(request, 'jello/create_customer.html', {
             "customer_form": customer_form
         })
