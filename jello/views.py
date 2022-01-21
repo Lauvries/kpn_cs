@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.views import View
-from .forms import CustomerForm
+from .forms import CustomerForm, ProductForm
 from .models import Customer, Product
 from django.http import HttpResponseRedirect
 from django.urls import reverse
@@ -11,21 +11,21 @@ from django.urls import reverse
 
 class CreateCustomer(View):
     def get(self, request):
-        form = CustomerForm()
+        customer_form = CustomerForm()
         return render(request, 'jello/create_customer.html', {
-            "form": form
+            "customer_form": customer_form
         })
 
     def post(self, request):
-        form = CustomerForm(request.POST)
-        if form.is_valid():
-            form.save()
+        customer_form = CustomerForm(request.POST)
+        if customer_form.is_valid():
+            customer_form.save()
 
             return render(request, 'jello/create_customer.html', {
                 "form": CustomerForm()
             })
         return render(request, 'jello/create_customer.html', {
-            "form": form
+            "customer_form": customer_form
         })
 
 
@@ -76,11 +76,26 @@ class CustomerDetail(View):
         customer_products = specific_customer.products.all()
         all_products = Product.objects.all()
 
-        unused_products = []
-        for product in all_products:
-            if product not in customer_products:
-                unused_products.append(product)
+        unused_products = [
+            product for product in all_products if product not in customer_products]
+
         return unused_products
+
+
+class CreateProduct(View):
+    def get(self, request):
+        products = Product.objects.all()
+        form = ProductForm()
+        return render(request, 'jello/create_product.html', {
+            "form": form,
+            "products": products
+        })
+
+    def post(self, request):
+        name = request.POST.get('name')
+        new = Product(name=name)
+        new.save()
+        return HttpResponseRedirect(reverse("create-product"))
 
 
 def update_customer_products(request):
@@ -90,8 +105,8 @@ def update_customer_products(request):
     all_products_qset = Product.objects.all()
     product_obj_list = []
 
-    for product in product_list:
-        product_obj_list.append(all_products_qset.get(name=product))
+    product_obj_list = [all_products_qset.get(
+        name=product) for product in product_list]
 
     customer.products.add(*product_obj_list)
 

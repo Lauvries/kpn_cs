@@ -4,24 +4,33 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Customer</title>
+    <title>Create Product</title>
 </head>
 <body>
-    <form action="{% url "create-customer" %}" method = "POST">
+    <form action=" {% url 'create-product' %} " method="POST">
         {% csrf_token %}
         <ul>
-            {% for field in customer_form %}
-                <li>
+            {% for field in form %}
+                <li style="list-style-type:none;">
                     {{field.label}}
                     {{field}}
                     {{field.errors}}
+                    <button>Add</button>
+
                 </li>
+
             {% endfor %}
         </ul>
-
-
-        <button>Create Customer</button>
     </form>
+    <h2>Current Products</h2>
+    {% for product in products %}
+        <ul>
+            <li style="list-style-type:none;">
+                {{product.name}}
+            </li>
+        </ul>
+    {% endfor %}
+
     <a href=" {% url "landing-page" %} ">Go Home</a>
 
 </body>
