@@ -23,3 +23,8 @@ class ProductForm(ModelForm):
         labels = {
             "name": "Product Name"
         }
+        error_messages = {
+            "name": {
+                "unique": "That product already exists, try again"
+            }
+        }

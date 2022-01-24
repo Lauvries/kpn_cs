@@ -1,3 +1,4 @@
+from django.db import IntegrityError
 from django.shortcuts import render, get_object_or_404
 from django.views import View
 from .forms import CustomerForm, ProductForm
@@ -11,20 +12,36 @@ from django.urls import reverse
 
 class CreateCustomer(View):
     def get(self, request):
-        customer_form = CustomerForm()
-        return render(request, 'jello/create_customer.html', {
-            "customer_form": customer_form
-        })
+        session = request.session
+        if 'tempform' in session.keys():
+            customer_form = CustomerForm(session['tempform'])
+            return render(request, 'jello/create_customer.html', {
+                "customer_form": customer_form
+            })
+        else:
+            customer_form = CustomerForm()
+            return render(request, 'jello/create_customer.html', {
+                "customer_form": customer_form
+            })
 
     def post(self, request):
         customer_form = CustomerForm(request.POST)
-        if customer_form.is_valid():
-            customer_form.save()
-            created_customer_id = Customer.objects.all().last().id
-            return HttpResponseRedirect(reverse('customer-detail', args=[created_customer_id]))
-        return render(request, 'jello/create_customer.html', {
-            "customer_form": customer_form
-        })
+        if 'create-customer' in request.POST:
+            if customer_form.is_valid():
+                customer_form.save()
+                created_customer_id = Customer.objects.all().last().id
+                try:
+                    del request.session['tempform']
+                except KeyError:
+                    pass
+                return HttpResponseRedirect(reverse('customer-detail', args=[created_customer_id]))
+            return render(request, 'jello/create_customer.html', {
+                "customer_form": customer_form
+            })
+        else:
+            session = request.session
+            session['tempform'] = request.POST
+            return HttpResponseRedirect(reverse('create-product'))
 
 
 class LandingPage(View):
@@ -90,9 +107,16 @@ class CreateProduct(View):
         })
 
     def post(self, request):
-        name = request.POST.get('name')
-        new = Product(name=name)
-        new.save()
+        form = ProductForm(request.POST)
+        products = Product.objects.all()
+
+        if form.is_valid():
+            form.save()
+        else:
+            return render(request, 'jello/create_product.html', {
+                "form": form,
+                "products": products
+            })
         return HttpResponseRedirect(reverse("create-product"))
 
 
@@ -101,7 +125,6 @@ def update_customer_products(request):
     customer_id = request.POST.get('customer_id')
     customer = Customer.objects.get(id=customer_id)
     all_products_qset = Product.objects.all()
-    product_obj_list = []
 
     product_obj_list = [all_products_qset.get(
         name=product) for product in product_list]

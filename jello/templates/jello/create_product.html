@@ -14,14 +14,14 @@
                 <li style="list-style-type:none;">
                     {{field.label}}
                     {{field}}
-                    {{field.errors}}
                     <button>Add</button>
+                    {{field.errors}}
 
                 </li>
 
             {% endfor %}
         </ul>
-    </form>
+    
     <h2>Current Products</h2>
     {% for product in products %}
         <ul>
@@ -30,8 +30,11 @@
             </li>
         </ul>
     {% endfor %}
+    </form>     
 
     <a href=" {% url "landing-page" %} ">Go Home</a>
-
+    {% if request.session.tempform %}
+        <a href=" {% url "create-customer" %} ">Go back to customer creation</a>
+    {% endif %}
 </body>
 </html>
