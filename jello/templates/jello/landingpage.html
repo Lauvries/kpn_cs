@@ -11,6 +11,7 @@
         {% csrf_token %}
         <input type="text" name="query">
         <button>Search Customer</button>
+        <p>(Mobile phone number, email address or zipcode + house number)</p>
     </form>
     
     {% if has_no_customers %}
