@@ -3,3 +3,4 @@ kpn_cs_venv/
 jello/migrations/__pycache__/*
 shell_func.py
 db.sqlite3
+.vscode/
