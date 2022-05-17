@@ -7,9 +7,6 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 
 
-# Create your views here.
-
-
 class CreateCustomer(View):
     def get(self, request):
         session = request.session  # gain access to session data
